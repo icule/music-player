@@ -5,6 +5,6 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @MyStyle
-public interface DatabaseConfiguration {
-    String path();
+public interface ConfigurationManagerDefinition {
+    String getDatabasePath();
 }
