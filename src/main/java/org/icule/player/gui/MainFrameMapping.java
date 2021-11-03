@@ -25,10 +25,6 @@ public class MainFrameMapping {
     }
 
     @FXML
-    public void infoButtonAction() {
-    }
-
-    @FXML
     public void nextButtonAction() {
     }
 
