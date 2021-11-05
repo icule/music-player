@@ -13,7 +13,7 @@ public class MusicDatabaseInterface {
     static final String TABLE_NAME = "MusicInfo";
     private static final String CREATE_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
             "(" +
-            "id uuid PRIMARY_KEY, " +
+            "id uuid PRIMARY KEY, " +
             "path varchar(512), " +
             "rating int, " +
             "lastModification long);";
@@ -25,7 +25,7 @@ public class MusicDatabaseInterface {
             " VALUES(?, ?, ?, ?);";
 
     private static final String UPDATE_QUERY = "UPDATE " + TABLE_NAME +
-            " SET path = ?, rating = ?, filename = ? " +
+            " SET path = ?, rating = ?, lastModification = ? " +
             " WHERE id = ?;";
 
     private static final String GET_ALL_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE 1;";
