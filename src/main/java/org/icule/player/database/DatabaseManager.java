@@ -2,6 +2,8 @@ package org.icule.player.database;
 
 import org.icule.player.configuration.ConfigurationManager;
 import org.icule.player.model.Music;
+import org.icule.player.model.Tag;
+import org.icule.player.model.TagMusicInformation;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +16,7 @@ public class DatabaseManager {
     private final Connection connection;
 
     private final MusicDatabaseInterface musicDatabaseInterface;
+    private final TagDatabaseInterface tagDatabaseInterface;
 
     public DatabaseManager(final ConfigurationManager configurationManager) throws ClassNotFoundException, SQLException {
         Class.forName("org.h2.Driver");
@@ -21,11 +24,13 @@ public class DatabaseManager {
         connection = DriverManager.getConnection(jdbcString);
 
         musicDatabaseInterface = new MusicDatabaseInterface(this);
+        tagDatabaseInterface = new TagDatabaseInterface(this);
     }
 
     public void init() throws DatabaseException {
         try {
             musicDatabaseInterface.init();
+            tagDatabaseInterface.init();
         }
         catch (SQLException e) {
             throw new DatabaseException(e, "Impossible to init the database.");
@@ -86,7 +91,49 @@ public class DatabaseManager {
 
     public synchronized void deleteMusic(final UUID id) throws DatabaseException {
         try {
+            tagDatabaseInterface.deleteAllTagForMusic(id);
             musicDatabaseInterface.deleteFromId(id);
+            commit();
+        }
+        catch (DatabaseException e) {
+            rollback();
+            throw e;
+        }
+    }
+
+    public synchronized void addTagMusicInformation(final TagMusicInformation tagMusicInformation) throws DatabaseException {
+        try {
+            tagDatabaseInterface.addTag(tagMusicInformation);
+            commit();
+        }
+        catch (DatabaseException e) {
+            rollback();
+            throw e;
+        }
+    }
+
+    public synchronized void deleteTagMusicInformation(final TagMusicInformation tagMusicInformation) throws DatabaseException {
+        try {
+            tagDatabaseInterface.deleteTagForMusic(tagMusicInformation);
+            commit();
+        }
+        catch (DatabaseException e) {
+            rollback();
+            throw e;
+        }
+    }
+
+    public synchronized List<UUID> getAllMusicIdForTag(final Tag tag) throws DatabaseException {
+        return tagDatabaseInterface.getMusicIdListForTag(tag);
+    }
+
+    public synchronized List<TagMusicInformation> getAllTagForMusic(final UUID id) throws DatabaseException {
+        return tagDatabaseInterface.getTagListForMusic(id);
+    }
+
+    public synchronized void updateLastModificationTime(final TagMusicInformation tagMusicInformation) throws DatabaseException {
+        try {
+            tagDatabaseInterface.updateLastModificationTime(tagMusicInformation);
             commit();
         }
         catch (DatabaseException e) {

@@ -14,9 +14,9 @@ public class MusicDatabaseInterface {
     private static final String CREATE_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
             "(" +
             "id uuid PRIMARY KEY, " +
-            "path varchar(512), " +
-            "rating int, " +
-            "lastModification long);";
+            "path varchar(512) not null, " +
+            "rating int not null, " +
+            "lastModification long not null);";
 
     private static final String SELECT_FROM_ID_QUERY = "SELECT * FROM " + TABLE_NAME +
             " WHERE id = ?;";

@@ -19,6 +19,7 @@ public class MainFrameMapping {
     public MainFrameMapping() {
     }
 
+
     @FXML
     private void initialize() {
         tagCombo.setItems(FXCollections.observableArrayList(Tag.values()));
