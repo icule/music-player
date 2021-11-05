@@ -1,23 +1,35 @@
 package org.icule.player.database;
 
 import org.icule.player.configuration.ConfigurationManager;
+import org.icule.player.model.Music;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.UUID;
 
 public class DatabaseManager {
     private final Connection connection;
+
+    private final MusicDatabaseInterface musicDatabaseInterface;
 
     public DatabaseManager(final ConfigurationManager configurationManager) throws ClassNotFoundException, SQLException {
         Class.forName("org.h2.Driver");
         String jdbcString = "jdbc:h2:" + configurationManager.getDatabasePath();
         connection = DriverManager.getConnection(jdbcString);
+
+        musicDatabaseInterface = new MusicDatabaseInterface(this);
     }
 
-    public void init() {
-
+    public void init() throws DatabaseException {
+        try {
+            musicDatabaseInterface.init();
+        }
+        catch (SQLException e) {
+            throw new DatabaseException(e, "Impossible to init the database.");
+        }
     }
 
     public void commit() throws DatabaseException {
@@ -40,5 +52,46 @@ public class DatabaseManager {
 
     PreparedStatement getStatement(final String query) throws SQLException {
         return connection.prepareStatement(query);
+    }
+
+    public synchronized void addMusic(final Music music) throws DatabaseException {
+        try {
+            musicDatabaseInterface.addMusic(music);
+            commit();
+        }
+        catch (DatabaseException e) {
+            rollback();
+            throw e;
+        }
+    }
+
+    public synchronized void updateMusic(final Music music) throws DatabaseException {
+        try {
+            musicDatabaseInterface.updateMusic(music);
+            commit();
+        }
+        catch (DatabaseException e) {
+            rollback();
+            throw e;
+        }
+    }
+
+    public synchronized Music getMusic(final UUID id) throws DatabaseException {
+        return musicDatabaseInterface.getMusicFromId(id);
+    }
+
+    public synchronized List<Music> getAllMusic() throws DatabaseException {
+        return musicDatabaseInterface.getAllMusic();
+    }
+
+    public synchronized void deleteMusic(final UUID id) throws DatabaseException {
+        try {
+            musicDatabaseInterface.deleteFromId(id);
+            commit();
+        }
+        catch (DatabaseException e) {
+            rollback();
+            throw e;
+        }
     }
 }
