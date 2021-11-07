@@ -20,7 +20,7 @@ public class TagDatabaseInterface {
             ");" +
             "ALTER TABLE " + TABLE_NAME + " " +
             "ADD FOREIGN KEY (id) REFERENCES " + MusicDatabaseInterface.TABLE_NAME + "(id);" +
-            "CREATE UNIQUE INDEX tagUnique ON " + TABLE_NAME + "(id, tag);";
+            "CREATE UNIQUE INDEX IF NOT EXISTS tagUnique ON " + TABLE_NAME + "(id, tag);";
 
     private static final String INSERT_QUERY = "INSERT INTO " + TABLE_NAME +
             " VALUES(?, ?, ?);";

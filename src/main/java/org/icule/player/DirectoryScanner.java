@@ -35,7 +35,7 @@ public class DirectoryScanner {
             try {
                 String mimeType = Files.probeContentType(f.toPath());
                 if (mimeType.contains("audio")) {
-                    treatMusic(file);
+                    treatMusic(f);
                 }
             }
             catch (IOException e) {

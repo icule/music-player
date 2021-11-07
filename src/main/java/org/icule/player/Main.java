@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.icule.player.configuration.ConfigurationManager;
+import org.icule.player.database.DatabaseManager;
 import org.icule.player.gui.FXMLLoaderFactory;
 
 public class Main extends Application {
@@ -21,6 +22,8 @@ public class Main extends Application {
 
         Injector injector = Guice.createInjector(new MainModule(configurationManager));
         FXMLLoaderFactory.parametrize(injector);
+
+        injector.getInstance(DatabaseManager.class).init();
 
         FXMLLoader loader = FXMLLoaderFactory.getLoader();
         loader.setLocation(getClass().getResource("/org/icule/player/gui/MainFrame.fxml"));

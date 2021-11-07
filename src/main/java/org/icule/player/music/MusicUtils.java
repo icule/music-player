@@ -5,7 +5,6 @@ import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
 import uk.co.caprica.vlcj.media.*;
 
 import java.io.File;
-import java.io.IOError;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;

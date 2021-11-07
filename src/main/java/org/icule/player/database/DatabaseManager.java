@@ -5,6 +5,7 @@ import org.icule.player.model.Music;
 import org.icule.player.model.Tag;
 import org.icule.player.model.TagMusicInformation;
 
+import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ public class DatabaseManager {
     private final MusicDatabaseInterface musicDatabaseInterface;
     private final TagDatabaseInterface tagDatabaseInterface;
 
+    @Inject
     public DatabaseManager(final ConfigurationManager configurationManager) throws ClassNotFoundException, SQLException {
         Class.forName("org.h2.Driver");
         String jdbcString = "jdbc:h2:" + configurationManager.getDatabasePath();
