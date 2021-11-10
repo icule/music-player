@@ -4,8 +4,11 @@ import javafx.application.Platform;
 import org.icule.player.database.DatabaseException;
 import org.icule.player.database.DatabaseManager;
 import org.icule.player.model.Music;
+import org.icule.player.model.MusicInformation;
 import org.icule.player.model.Playlist;
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
+import uk.co.caprica.vlcj.media.Meta;
+import uk.co.caprica.vlcj.media.MetaApi;
 import uk.co.caprica.vlcj.player.base.MediaPlayer;
 import uk.co.caprica.vlcj.player.component.AudioPlayerComponent;
 

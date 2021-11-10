@@ -4,25 +4,35 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
 import javafx.stage.DirectoryChooser;
 import org.icule.player.DirectoryScanner;
 import org.icule.player.database.DatabaseManager;
 import org.icule.player.model.Music;
+import org.icule.player.model.MusicInformation;
 import org.icule.player.model.Tag;
+import org.icule.player.model.TagMusicInformation;
 import org.icule.player.music.MusicListener;
 import org.icule.player.music.MusicPlayer;
+import org.icule.player.music.MusicUtils;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 public class MainFrameMapping implements MusicListener {
-    @FXML
-    private ComboBox<Tag> tagCombo;
+    public Label titleLabel;
+    public Label artistLabel;
+    public Label albumLabel;
+    public Label idLabel;
+    public Label pathLabel;
+    public Label durationLabel;
+    public Label tagLabel;
+
 
     @FXML
-    private TextArea musicInformationArea;
+    private ComboBox<Tag> tagCombo;
 
     private final MusicPlayer musicPlayer;
     private final DatabaseManager databaseManager;
@@ -86,9 +96,24 @@ public class MainFrameMapping implements MusicListener {
     private void displayMusicInfo(final UUID musicId) {
         try {
             Music music = databaseManager.getMusic(musicId);
+            MusicInformation musicInformation = MusicUtils.getCurrentMusicInformation(music.getPath());
+            List<TagMusicInformation> tagList = databaseManager.getAllTagForMusic(musicId);
+
+            titleLabel.setText(musicInformation.getTitle());
+            artistLabel.setText(musicInformation.getArtist());
+            albumLabel.setText(musicInformation.getArtist());
+            durationLabel.setText("" + musicInformation.getDuration() / 1000); //duration is in ms
+            pathLabel.setText(music.getPath());
+            idLabel.setText(music.getId().toString());
+
+            StringBuilder tagListBuilder = new StringBuilder();
+            for (TagMusicInformation tagMusicInformation : tagList) {
+                tagListBuilder.append("[").append(tagMusicInformation.getTag()).append("] ");
+            }
+            tagLabel.setText(tagListBuilder.toString());
         }
         catch (Exception e) {
-            musicInformationArea.setText("Impossible to display music info.");
+            titleLabel.setText("Impossible to get the information from music");
         }
     }
 }

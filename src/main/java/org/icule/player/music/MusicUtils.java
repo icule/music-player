@@ -1,6 +1,7 @@
 package org.icule.player.music;
 
 import org.icule.player.model.Music;
+import org.icule.player.model.MusicInformation;
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
 import uk.co.caprica.vlcj.media.*;
 
@@ -57,5 +58,31 @@ public class MusicUtils {
             throw new IOException("The audio file is not correctly tagged.");
         }
         return new Music(id, file.getAbsolutePath(), 3, file.lastModified());
+    }
+
+    public static MusicInformation getCurrentMusicInformation(final String path) {
+        MusicInformation.Builder builder = new MusicInformation.Builder();
+        Media media = getParsedMedia(factory, path);
+        MetaApi meta = media.meta();
+        if (meta.get(Meta.ARTIST) != null) {
+            builder.setArtist(meta.get(Meta.ARTIST));
+        }
+        else {
+            builder.setArtist("Unknown artist");
+        }
+        if (meta.get(Meta.TITLE) != null) {
+            builder.setTitle(meta.get(Meta.TITLE));
+        }
+        else {
+            builder.setTitle("Unknown Title");
+        }
+        if (meta.get(Meta.ALBUM) != null) {
+            builder.setAlbum(meta.get(Meta.ALBUM));
+        }
+        else {
+            builder.setAlbum("Unknown album");
+        }
+        builder.setDuration(media.info().duration());
+        return builder.create();
     }
 }
