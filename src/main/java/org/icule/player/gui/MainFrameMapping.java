@@ -1,22 +1,23 @@
 package org.icule.player.gui;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import org.icule.player.DirectoryScanner;
 import org.icule.player.database.DatabaseManager;
-import org.icule.player.model.Playlist;
+import org.icule.player.model.Music;
 import org.icule.player.model.Tag;
+import org.icule.player.music.MusicListener;
 import org.icule.player.music.MusicPlayer;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.UUID;
 
-public class MainFrameMapping {
+public class MainFrameMapping implements MusicListener {
     @FXML
     private ComboBox<Tag> tagCombo;
 
@@ -34,6 +35,8 @@ public class MainFrameMapping {
         this.musicPlayer = musicPlayer;
         this.databaseManager = databaseManager;
         this.directoryScanner = directoryScanner;
+
+        musicPlayer.addMusicListener(this);
     }
 
 
@@ -72,6 +75,20 @@ public class MainFrameMapping {
         File selected = fileChooser.showDialog(null);
         if (selected != null) {
             directoryScanner.scanDirectory(selected);
+        }
+    }
+
+    @Override
+    public void musicStarted(final UUID musicId) {
+        Platform.runLater((() -> displayMusicInfo(musicId)));
+    }
+
+    private void displayMusicInfo(final UUID musicId) {
+        try {
+            Music music = databaseManager.getMusic(musicId);
+        }
+        catch (Exception e) {
+            musicInformationArea.setText("Impossible to display music info.");
         }
     }
 }

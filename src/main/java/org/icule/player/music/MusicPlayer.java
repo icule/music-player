@@ -52,7 +52,7 @@ public class MusicPlayer {
         try {
             Music music = databaseManager.getMusic(playlist.getMusic(index));
             Platform.runLater(() -> mediaPlayer.media().play(music.getPath()));
-
+            fireNewMusic();
         }
         catch (DatabaseException e) {
             Platform.runLater(() -> mediaPlayer.controls().stop());
