@@ -11,12 +11,14 @@ import uk.co.caprica.vlcj.player.component.AudioPlayerComponent;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 public class MusicPlayer {
     private final DatabaseManager databaseManager;
     private final Playlist playlist;
+    private final List<MusicListener> musicListenerList;
 
     private final MediaPlayer mediaPlayer;
     private final AudioPlayerComponent mediaPlayerComponent;
@@ -29,6 +31,7 @@ public class MusicPlayer {
                        final Playlist playlist) {
         this.databaseManager = databaseManager;
         this.playlist = playlist;
+        musicListenerList = new ArrayList<>();
 
         random = new Random(Instant.now().toEpochMilli());
 
@@ -49,6 +52,7 @@ public class MusicPlayer {
         try {
             Music music = databaseManager.getMusic(playlist.getMusic(index));
             Platform.runLater(() -> mediaPlayer.media().play(music.getPath()));
+
         }
         catch (DatabaseException e) {
             Platform.runLater(() -> mediaPlayer.controls().stop());
@@ -71,7 +75,17 @@ public class MusicPlayer {
         mediaPlayer.controls().play();
     }
 
-    public UUID getCurrentMusicId() {
-        return playlist.getMusic(listPosition);
+    public void addMusicListener(final MusicListener musicListener) {
+        this.musicListenerList.add(musicListener);
+    }
+
+    public void removeMusicListener(final MusicListener musicListener) {
+        this.musicListenerList.remove(musicListener);
+    }
+
+    private void fireNewMusic() {
+        for (MusicListener listener : musicListenerList) {
+            listener.musicStarted(playlist.getMusic(listPosition));
+        }
     }
 }
