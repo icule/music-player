@@ -16,6 +16,8 @@
                   <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopActionButton" text="Stop" />
                   <ComboBox fx:id="tagCombo" prefWidth="150.0" />
                   <Button fx:id="tagButton" mnemonicParsing="false" onAction="#tagButtonAction" text="Tag" />
+                  <ComboBox fx:id="rateComboBox" prefWidth="80.0" />
+                  <Button mnemonicParsing="false" onAction="#onRateAction" text="Rate" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

@@ -26,4 +26,11 @@ public class Playlist {
             musicList.add(music.getId());
         }
     }
+
+    public void initPlaylist(final List<Music> initialList) {
+        musicList.clear();
+        for (Music music : initialList) {
+            addMusic(music);
+        }
+    }
 }

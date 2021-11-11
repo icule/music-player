@@ -2,6 +2,7 @@ package org.icule.player.gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -18,6 +19,7 @@ import org.icule.player.music.MusicUtils;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +32,8 @@ public class MainFrameMapping implements MusicListener {
     public Label durationLabel;
     public Label tagLabel;
 
+    @FXML
+    public ComboBox<Integer> rateComboBox;
 
     @FXML
     private ComboBox<Tag> tagCombo;
@@ -53,6 +57,12 @@ public class MainFrameMapping implements MusicListener {
     @FXML
     private void initialize() {
         tagCombo.setItems(FXCollections.observableArrayList(Tag.values()));
+
+        List<Integer> ratingList = new ArrayList<>();
+        for (int i = 1; i <= 5; ++i) {
+            ratingList.add(i);
+        }
+        rateComboBox.setItems(FXCollections.observableList(ratingList));
     }
 
     @FXML
@@ -106,6 +116,9 @@ public class MainFrameMapping implements MusicListener {
             pathLabel.setText(music.getPath());
             idLabel.setText(music.getId().toString());
 
+            System.out.println(music.getRating());
+            rateComboBox.getSelectionModel().select(music.getRating() - 1);
+
             StringBuilder tagListBuilder = new StringBuilder();
             for (TagMusicInformation tagMusicInformation : tagList) {
                 tagListBuilder.append("[").append(tagMusicInformation.getTag()).append("] ");
@@ -115,5 +128,9 @@ public class MainFrameMapping implements MusicListener {
         catch (Exception e) {
             titleLabel.setText("Impossible to get the information from music");
         }
+    }
+
+    public void onRateAction() {
+
     }
 }

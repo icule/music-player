@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 import org.icule.player.configuration.ConfigurationManager;
 import org.icule.player.database.DatabaseManager;
 import org.icule.player.gui.FXMLLoaderFactory;
+import org.icule.player.model.Music;
+import org.icule.player.model.Playlist;
+
+import java.util.List;
 
 public class Main extends Application {
     public static void main(final String[] args) {
@@ -23,7 +27,10 @@ public class Main extends Application {
         Injector injector = Guice.createInjector(new MainModule(configurationManager));
         FXMLLoaderFactory.parametrize(injector);
 
-        injector.getInstance(DatabaseManager.class).init();
+        DatabaseManager databaseManager = injector.getInstance(DatabaseManager.class);
+        databaseManager.init();
+        List<Music> knownMusicList = databaseManager.getAllMusic();
+        injector.getInstance(Playlist.class).initPlaylist(knownMusicList);
 
         FXMLLoader loader = FXMLLoaderFactory.getLoader();
         loader.setLocation(getClass().getResource("/org/icule/player/gui/MainFrame.fxml"));
