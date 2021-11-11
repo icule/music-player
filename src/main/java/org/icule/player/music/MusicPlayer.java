@@ -4,19 +4,14 @@ import javafx.application.Platform;
 import org.icule.player.database.DatabaseException;
 import org.icule.player.database.DatabaseManager;
 import org.icule.player.model.Music;
-import org.icule.player.model.MusicInformation;
 import org.icule.player.model.Playlist;
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
-import uk.co.caprica.vlcj.media.Meta;
-import uk.co.caprica.vlcj.media.MetaApi;
 import uk.co.caprica.vlcj.player.base.MediaPlayer;
-import uk.co.caprica.vlcj.player.component.AudioPlayerComponent;
 
 import javax.inject.Inject;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 
 public class MusicPlayer {
     private final DatabaseManager databaseManager;
@@ -24,9 +19,7 @@ public class MusicPlayer {
     private final List<MusicListener> musicListenerList;
 
     private final MediaPlayer mediaPlayer;
-    private final AudioPlayerComponent mediaPlayerComponent;
-    private final Random random;
-    private int listPosition;
+    private Music currentMusic;
 
 
     @Inject
@@ -36,8 +29,6 @@ public class MusicPlayer {
         this.playlist = playlist;
         musicListenerList = new ArrayList<>();
 
-        random = new Random(Instant.now().toEpochMilli());
-
         MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory();
         mediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer();
         mediaPlayer.events().addMediaPlayerEventListener(new MediaPlayerEventListenerAdapter() {
@@ -46,15 +37,12 @@ public class MusicPlayer {
                 nextMusic();
             }
         });
-        mediaPlayerComponent = new AudioPlayerComponent();
-        listPosition = 0;
     }
 
-    private void setItem(final int index) {
-        listPosition = index;
+    private void setItem(final UUID musicId) {
         try {
-            Music music = databaseManager.getMusic(playlist.getMusic(index));
-            Platform.runLater(() -> mediaPlayer.media().play(music.getPath()));
+            currentMusic = databaseManager.getMusic(musicId);
+            Platform.runLater(() -> mediaPlayer.media().play(currentMusic.getPath()));
             fireNewMusic();
         }
         catch (DatabaseException e) {
@@ -63,7 +51,7 @@ public class MusicPlayer {
     }
 
     public void nextMusic() {
-        setItem(random.nextInt(playlist.getPlaylistLength() - 1));
+        setItem(playlist.getNextMusic());
     }
 
     public void stopMusic() {
@@ -88,7 +76,7 @@ public class MusicPlayer {
 
     private void fireNewMusic() {
         for (MusicListener listener : musicListenerList) {
-            listener.musicStarted(playlist.getMusic(listPosition));
+            listener.musicStarted(currentMusic.getId());
         }
     }
 }
