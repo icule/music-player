@@ -4,15 +4,14 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.DirectoryChooser;
 import org.icule.player.DirectoryScanner;
+import org.icule.player.database.DatabaseException;
 import org.icule.player.database.DatabaseManager;
-import org.icule.player.model.Music;
-import org.icule.player.model.MusicInformation;
-import org.icule.player.model.Tag;
-import org.icule.player.model.TagMusicInformation;
+import org.icule.player.model.*;
 import org.icule.player.music.MusicListener;
 import org.icule.player.music.MusicPlayer;
 import org.icule.player.music.MusicUtils;
@@ -41,14 +40,17 @@ public class MainFrameMapping implements MusicListener {
     private final MusicPlayer musicPlayer;
     private final DatabaseManager databaseManager;
     private final DirectoryScanner directoryScanner;
+    private final Playlist playlist;
 
     @Inject
     public MainFrameMapping(final MusicPlayer musicPlayer,
                             final DatabaseManager databaseManager,
-                            final DirectoryScanner directoryScanner) {
+                            final DirectoryScanner directoryScanner,
+                            final Playlist playlist) {
         this.musicPlayer = musicPlayer;
         this.databaseManager = databaseManager;
         this.directoryScanner = directoryScanner;
+        this.playlist = playlist;
 
         musicPlayer.addMusicListener(this);
     }
@@ -131,6 +133,28 @@ public class MainFrameMapping implements MusicListener {
     }
 
     public void onRateAction() {
+        if (rateComboBox.getSelectionModel().isEmpty()) {
+            return;
+        }
+        try {
+            Music music = databaseManager.getMusic(musicPlayer.getCurrentMusic().getId());
+            int newRating = rateComboBox.getValue();
+            if (newRating == music.getRating()) {
+                return;
+            }
+            Music updated = music.withRating(newRating);
+
+            databaseManager.updateMusic(updated);
+            playlist.updateRating(updated);
+        }
+        catch (DatabaseException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Operation error.");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible to add rating.");
+
+            alert.showAndWait();
+        }
 
     }
 }

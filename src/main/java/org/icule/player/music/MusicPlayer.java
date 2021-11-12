@@ -50,6 +50,10 @@ public class MusicPlayer {
         }
     }
 
+    public Music getCurrentMusic() {
+        return currentMusic;
+    }
+
     public void nextMusic() {
         setItem(playlist.getNextMusic());
     }

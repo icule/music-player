@@ -26,6 +26,11 @@ public class Playlist {
         }
     }
 
+    public synchronized void updateRating(final Music music) {
+        musicList.removeIf(u -> u.equals(music.getId()));
+        addMusic(music);
+    }
+
     public synchronized void initPlaylist(final List<Music> initialList) {
         musicList.clear();
         for (Music music : initialList) {
