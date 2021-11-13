@@ -2,7 +2,6 @@ package org.icule.player.gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -89,6 +88,39 @@ public class MainFrameMapping implements MusicListener {
 
     @FXML
     public void tagButtonAction() {
+        if (tagCombo.getSelectionModel().isEmpty()) {
+            return;
+        }
+
+        try {
+            Tag selectedTag = tagCombo.getValue();
+            UUID currentMusicId = musicPlayer.getCurrentMusic().getId();
+            List<TagMusicInformation> tagList = databaseManager.getAllTagForMusic(currentMusicId);
+            Music music = databaseManager.getMusic(currentMusicId);
+            if (tagList.stream().anyMatch(t -> t.getTag() == selectedTag)) {
+                TagMusicInformation tagMusicInformation = tagList.stream().filter(t -> t.getTag() == selectedTag).findFirst().get();
+                databaseManager.deleteTagMusicInformation(tagMusicInformation);
+                tagList.remove(tagMusicInformation);
+            }
+            else {
+
+                TagMusicInformation tagMusicInformation = new TagMusicInformation(music.getId(),
+                                                                                  selectedTag,
+                                                                                  music.getLastModification());
+                databaseManager.addTagMusicInformation(tagMusicInformation);
+                tagList.add(tagMusicInformation);
+            }
+
+            displayTagList(tagList);
+        }
+        catch (DatabaseException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Operation error.");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible to add the tag to music.");
+
+            alert.showAndWait();
+        }
     }
 
     public void onScanDirectoryAction() {
@@ -121,15 +153,19 @@ public class MainFrameMapping implements MusicListener {
             System.out.println(music.getRating());
             rateComboBox.getSelectionModel().select(music.getRating() - 1);
 
-            StringBuilder tagListBuilder = new StringBuilder();
-            for (TagMusicInformation tagMusicInformation : tagList) {
-                tagListBuilder.append("[").append(tagMusicInformation.getTag()).append("] ");
-            }
-            tagLabel.setText(tagListBuilder.toString());
+            displayTagList(tagList);
         }
         catch (Exception e) {
             titleLabel.setText("Impossible to get the information from music");
         }
+    }
+
+    private void displayTagList(final List<TagMusicInformation> toDisplayList) {
+        StringBuilder tagListBuilder = new StringBuilder();
+        for (TagMusicInformation tagMusicInformation : toDisplayList) {
+            tagListBuilder.append("[").append(tagMusicInformation.getTag()).append("] ");
+        }
+        tagLabel.setText(tagListBuilder.toString());
     }
 
     public void onRateAction() {
