@@ -75,7 +75,9 @@
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Music">
-          </Menu>
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onShowRemoveMusicAction" text="Show removed music" />
+               </items></Menu>
         </menus>
       </MenuBar>
    </top>
