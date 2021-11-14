@@ -142,13 +142,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <outputDirectory>build</outputDirectory>
-                    <finalName>MusicLibrary</finalName>
+                    <finalName>MusicPlayer</finalName>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                             <mainClass>
-                                org.icule.player.MainFx
+                                org.icule.player.Main
                             </mainClass>
                         </manifest>
                     </archive>

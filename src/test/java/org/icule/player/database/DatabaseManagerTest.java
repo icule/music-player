@@ -7,6 +7,7 @@ import org.icule.player.configuration.ConfigurationManager;
 import org.icule.player.model.Music;
 import org.icule.player.model.Tag;
 import org.icule.player.model.TagMusicInformation;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,8 +45,16 @@ public class DatabaseManagerTest {
         info3 = new TagMusicInformation(music2.getId(), Tag.GOOD, music2.getLastModification());
     }
 
+    @After
+    public void tearDown() throws DatabaseException {
+        databaseManager.close();
+        deleteDatabase();
+    }
+
     private void deleteDatabase() {
-        File f = new File("data.db.mv.db");
+        File f = new File("./data.db.mv.db");
+        f.delete();
+        f = new File("./data.db.trace.db");
         f.delete();
     }
 

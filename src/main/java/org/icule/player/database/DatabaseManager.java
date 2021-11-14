@@ -39,6 +39,15 @@ public class DatabaseManager {
         }
     }
 
+    public void close() throws DatabaseException {
+        try {
+            connection.close();
+        }
+        catch (SQLException e) {
+            throw new DatabaseException(e, "Impossible to close the connection to database.");
+        }
+    }
+
     public void commit() throws DatabaseException {
         try {
             connection.commit();
