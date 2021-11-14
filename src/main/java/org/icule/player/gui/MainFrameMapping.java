@@ -157,7 +157,7 @@ public class MainFrameMapping implements MusicListener {
             durationLabel.setText("" + musicInformation.getDuration() / 1000); //duration is in ms
             pathLabel.setText(music.getPath());
             idLabel.setText(music.getId().toString());
-            
+
             rateComboBox.getSelectionModel().select(music.getRating() - 1);
 
             displayTagList(tagList);
