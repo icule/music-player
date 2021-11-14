@@ -60,7 +60,7 @@ public class MusicUtils {
         return new Music(id, file.getAbsolutePath(), 3, file.lastModified());
     }
 
-    public static MusicInformation getCurrentMusicInformation(final String path) {
+    public static MusicInformation getMusicInformation(final String path) {
         MusicInformation.Builder builder = new MusicInformation.Builder();
         Media media = getParsedMedia(factory, path);
         MetaApi meta = media.meta();

@@ -2,7 +2,6 @@ package org.icule.player.gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -149,7 +148,7 @@ public class MainFrameMapping implements MusicListener {
     private void displayMusicInfo(final UUID musicId) {
         try {
             Music music = databaseManager.getMusic(musicId);
-            MusicInformation musicInformation = MusicUtils.getCurrentMusicInformation(music.getPath());
+            MusicInformation musicInformation = MusicUtils.getMusicInformation(music.getPath());
             List<TagMusicInformation> tagList = databaseManager.getAllTagForMusic(musicId);
 
             titleLabel.setText(musicInformation.getTitle());
@@ -158,8 +157,7 @@ public class MainFrameMapping implements MusicListener {
             durationLabel.setText("" + musicInformation.getDuration() / 1000); //duration is in ms
             pathLabel.setText(music.getPath());
             idLabel.setText(music.getId().toString());
-
-            System.out.println(music.getRating());
+            
             rateComboBox.getSelectionModel().select(music.getRating() - 1);
 
             displayTagList(tagList);

@@ -10,7 +10,7 @@
          <bottom>
             <FlowPane alignment="CENTER_RIGHT" hgap="50.0" vgap="50.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onRemoveTagAction" text="Remove Tag" />
+                  <Button fx:id="removeTagButton" mnemonicParsing="false" onAction="#onRemoveTagAction" text="Remove Tag" />
                   <Button mnemonicParsing="false" onAction="#onCloseAction" text="Close" />
                </children>
             </FlowPane>
