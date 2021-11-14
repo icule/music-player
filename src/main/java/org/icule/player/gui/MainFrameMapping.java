@@ -115,6 +115,8 @@ public class MainFrameMapping implements MusicListener {
                                                                                   music.getLastModification());
                 databaseManager.addTagMusicInformation(tagMusicInformation);
                 tagList.add(tagMusicInformation);
+
+                playlist.removeMusic(music);
             }
 
             displayTagList(tagList);

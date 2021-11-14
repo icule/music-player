@@ -31,6 +31,10 @@ public class Playlist {
         addMusic(music);
     }
 
+    public synchronized void removeMusic(final Music music) {
+        musicList.removeIf(u -> u .equals(music.getId()));
+    }
+
     public synchronized void initPlaylist(final List<Music> initialList) {
         musicList.clear();
         for (Music music : initialList) {
