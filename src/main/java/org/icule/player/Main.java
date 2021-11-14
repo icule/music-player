@@ -8,12 +8,16 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.icule.player.configuration.ConfigurationManager;
+import org.icule.player.database.DatabaseException;
 import org.icule.player.database.DatabaseManager;
 import org.icule.player.gui.FXMLLoaderFactory;
 import org.icule.player.model.Music;
 import org.icule.player.model.Playlist;
+import org.icule.player.model.Tag;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class Main extends Application {
     public static void main(final String[] args) {
@@ -29,8 +33,7 @@ public class Main extends Application {
 
         DatabaseManager databaseManager = injector.getInstance(DatabaseManager.class);
         databaseManager.init();
-        List<Music> knownMusicList = databaseManager.getAllMusic();
-        injector.getInstance(Playlist.class).initPlaylist(knownMusicList);
+        injector.getInstance(Playlist.class).initPlaylist(getAllMusicToAdd(databaseManager));
 
         FXMLLoader loader = FXMLLoaderFactory.getLoader();
         loader.setLocation(getClass().getResource("/org/icule/player/gui/MainFrame.fxml"));
@@ -40,5 +43,15 @@ public class Main extends Application {
         stage.setTitle("Music player");
 
         stage.show();
+    }
+
+    private List<Music> getAllMusicToAdd(final DatabaseManager databaseManager) throws DatabaseException {
+        List<Music> knownMusicList = new LinkedList<>(databaseManager.getAllMusic());
+        List<UUID> toRemoveList = databaseManager.getAllMusicIdForTag(Tag.TO_REMOVE);
+
+        for (UUID uuid : toRemoveList) {
+            knownMusicList.removeIf(u -> u.getId().equals(uuid));
+        }
+        return knownMusicList;
     }
 }
