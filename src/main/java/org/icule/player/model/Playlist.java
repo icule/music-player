@@ -1,10 +1,7 @@
 package org.icule.player.model;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Playlist {
     private final List<UUID> musicList;
@@ -12,7 +9,7 @@ public class Playlist {
 
     @Inject
     public Playlist() {
-        musicList = new ArrayList<>();
+        musicList = new LinkedList<>();
         random = new Random();
     }
 

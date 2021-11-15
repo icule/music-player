@@ -2,6 +2,7 @@ package org.icule.player.gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -205,6 +206,7 @@ public class MainFrameMapping implements MusicListener {
 
     }
 
+    @FXML
     public void onShowRemoveMusicAction() throws IOException {
         FXMLLoader loader = FXMLLoaderFactory.getLoader();
         loader.setLocation(getClass().getResource("/org/icule/player/gui/RemovedMusicFrame.fxml"));
@@ -218,5 +220,11 @@ public class MainFrameMapping implements MusicListener {
         frame.setStage(stage);
 
         stage.show();
+    }
+
+    @FXML
+    public void onCheckMusicAction() throws DatabaseException {
+        directoryScanner.checkDatabaseExistence();
+        playlist.initPlaylist(DatabaseUtils.getAllMusicForPlaylist(databaseManager));
     }
 }

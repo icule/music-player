@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class DirectoryScanner {
     private final Playlist playlist;
@@ -56,6 +57,15 @@ public class DirectoryScanner {
         }
         else {
             databaseManager.updateMusic(toAdd.withRating(inDatabase.getRating()));
+        }
+    }
+
+    public void checkDatabaseExistence() throws DatabaseException {
+        List<Music> musicList = databaseManager.getAllMusic();
+        for (Music music : musicList) {
+            if (!new File(music.getPath()).exists()) {
+                databaseManager.deleteMusic(music.getId());
+            }
         }
     }
 }

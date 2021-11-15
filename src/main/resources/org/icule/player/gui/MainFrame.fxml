@@ -71,6 +71,8 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#onScanDirectoryAction" text="Scan Directory" />
+                  <MenuItem mnemonicParsing="false" onAction="#onCheckMusicAction" text="Check music" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
