@@ -16,16 +16,17 @@ public class MusicDatabaseInterface {
             "id uuid PRIMARY KEY, " +
             "path varchar(512) not null, " +
             "rating int not null, " +
-            "lastModification long not null);";
+            "lastModification long not null," +
+            "volumeOffset int not null);";
 
     private static final String SELECT_FROM_ID_QUERY = "SELECT * FROM " + TABLE_NAME +
             " WHERE id = ?;";
 
     private static final String INSERT_QUERY = "INSERT INTO " + TABLE_NAME +
-            " VALUES(?, ?, ?, ?);";
+            " VALUES(?, ?, ?, ?, ?);";
 
     private static final String UPDATE_QUERY = "UPDATE " + TABLE_NAME +
-            " SET path = ?, rating = ?, lastModification = ? " +
+            " SET path = ?, rating = ?, lastModification = ?, volumeOffset = ?" +
             " WHERE id = ?;";
 
     private static final String GET_ALL_QUERY = "SELECT * FROM " + TABLE_NAME + " WHERE 1;";
@@ -50,6 +51,7 @@ public class MusicDatabaseInterface {
             statement.setString(2, music.getPath());
             statement.setInt(3, music.getRating());
             statement.setLong(4, music.getLastModification());
+            statement.setInt(5, music.getVolumeOffset());
 
             statement.execute();
         }
@@ -63,8 +65,10 @@ public class MusicDatabaseInterface {
             statement.setString(1, music.getPath());
             statement.setInt(2, music.getRating());
             statement.setLong(3, music.getLastModification());
+            statement.setInt(4, music.getVolumeOffset());
 
-            statement.setObject(4, music.getId());
+            statement.setObject(5, music.getId());
+
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -76,7 +80,8 @@ public class MusicDatabaseInterface {
         return new Music((UUID)resultSet.getObject(1),
                          resultSet.getString(2),
                          resultSet.getInt(3),
-                         resultSet.getLong(4));
+                         resultSet.getLong(4),
+                         resultSet.getInt(5));
     }
 
     Music getMusicFromId(final UUID uuid) throws DatabaseException {

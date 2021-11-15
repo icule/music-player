@@ -15,4 +15,6 @@ public abstract class MusicDefinition {
     public abstract int getRating();
 
     public abstract long getLastModification();
+
+    public abstract int getVolumeOffset();
 }

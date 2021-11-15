@@ -57,7 +57,7 @@ public class MusicUtils {
         if (id == null) {
             throw new IOException("The audio file is not correctly tagged.");
         }
-        return new Music(id, file.getAbsolutePath(), 3, file.lastModified());
+        return new Music(id, file.getAbsolutePath(), 3, file.lastModified(), 0);
     }
 
     public static MusicInformation getMusicInformation(final String path) {

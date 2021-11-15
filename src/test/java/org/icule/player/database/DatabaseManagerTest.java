@@ -37,8 +37,8 @@ public class DatabaseManagerTest {
         databaseManager = new DatabaseManager(configurationManager);
         databaseManager.init();
 
-        music1 = new Music(UUID.randomUUID(), "test", 3, Instant.now().minusSeconds(10).toEpochMilli());
-        music2 = new Music(UUID.randomUUID(), "test2", 1, Instant.now().toEpochMilli());
+        music1 = new Music(UUID.randomUUID(), "test", 3, Instant.now().minusSeconds(10).toEpochMilli(), 5);
+        music2 = new Music(UUID.randomUUID(), "test2", 1, Instant.now().toEpochMilli(), 4);
 
         info1 = new TagMusicInformation(music1.getId(), Tag.GOOD, music1.getLastModification());
         info2 = new TagMusicInformation(music1.getId(), Tag.TO_REMOVE, music1.getLastModification());
