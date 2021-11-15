@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -161,6 +162,7 @@ public class MainFrameMapping implements MusicListener {
             albumLabel.setText(musicInformation.getArtist());
             durationLabel.setText("" + musicInformation.getDuration() / 1000); //duration is in ms
             pathLabel.setText(music.getPath());
+            pathLabel.setTooltip(new Tooltip(music.getPath()));
             idLabel.setText(music.getId().toString());
 
             rateComboBox.getSelectionModel().select(music.getRating() - 1);

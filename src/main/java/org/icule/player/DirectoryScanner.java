@@ -33,17 +33,19 @@ public class DirectoryScanner {
             if (f.isDirectory()) {
                 scanDirectory(f);
             }
-            try {
-                String mimeType = Files.probeContentType(f.toPath());
-                if (mimeType.contains("audio")) {
-                    treatMusic(f);
+            else {
+                try {
+                    String mimeType = Files.probeContentType(f.toPath());
+                    if (mimeType == null || mimeType.contains("audio")) {
+                        treatMusic(f);
+                    }
                 }
-            }
-            catch (IOException e) {
-                System.out.println("Impossible to get the mimeType of file " + f.getAbsolutePath());
-            }
-            catch (DatabaseException e) {
-                System.out.println("Impossible to add the music in database");
+                catch (IOException e) {
+                    System.out.println("Impossible to get the mimeType of file " + f.getAbsolutePath());
+                }
+                catch (DatabaseException e) {
+                    System.out.println("Impossible to add the music in database");
+                }
             }
         }
     }
