@@ -5,5 +5,7 @@ package org.icule.player.model;
  */
 public enum Tag {
     GOOD,
-    TO_REMOVE
+    TO_REMOVE,
+    TO_CUT,
+    TO_FIX
 }
