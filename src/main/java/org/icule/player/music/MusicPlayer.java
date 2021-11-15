@@ -33,7 +33,11 @@ public class MusicPlayer {
         mediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer();
         mediaPlayer.events().addMediaPlayerEventListener(new MediaPlayerEventListenerAdapter() {
             @Override
-            public void finished(MediaPlayer mediaPlayer) {
+            public void finished(final MediaPlayer mediaPlayer) {
+                nextMusic();
+            }
+            @Override
+            public void error(final MediaPlayer mediaPlayer) {
                 nextMusic();
             }
         });
