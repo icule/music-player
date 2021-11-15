@@ -35,7 +35,7 @@ public class Main extends Application {
         loader.setLocation(getClass().getResource("/org/icule/player/gui/MainFrame.fxml"));
 
         BorderPane pane = loader.load();
-        stage.setScene(new Scene(pane));
+        stage.setScene(FXMLLoaderFactory.getScene(pane));
         stage.setTitle("Music player");
 
         stage.show();

@@ -125,6 +125,7 @@ public class MainFrameMapping implements MusicListener {
         }
         catch (DatabaseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.getDialogPane().getStylesheets().add(FXMLLoaderFactory.class.getResource("/application.css").toExternalForm());
             alert.setTitle("Operation error.");
             alert.setHeaderText(null);
             alert.setContentText("Impossible to add the tag to music.");
@@ -197,6 +198,7 @@ public class MainFrameMapping implements MusicListener {
         }
         catch (DatabaseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.getDialogPane().getStylesheets().add(FXMLLoaderFactory.class.getResource("/application.css").toExternalForm());
             alert.setTitle("Operation error.");
             alert.setHeaderText(null);
             alert.setContentText("Impossible to add rating.");
@@ -213,7 +215,7 @@ public class MainFrameMapping implements MusicListener {
 
         BorderPane pane = loader.load();
         Stage stage = new Stage();
-        stage.setScene(new Scene(pane));
+        stage.setScene(FXMLLoaderFactory.getScene(pane));
         stage.setTitle("Music tagged with removed.");
 
         RemovedMusicFrame frame = loader.getController();
