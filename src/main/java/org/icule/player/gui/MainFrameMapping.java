@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.icule.player.DirectoryScanner;
 import org.icule.player.database.DatabaseException;
 import org.icule.player.database.DatabaseManager;
+import org.icule.player.database.DatabaseUtils;
 import org.icule.player.model.*;
 import org.icule.player.music.MusicListener;
 import org.icule.player.music.MusicPlayer;
@@ -131,12 +132,14 @@ public class MainFrameMapping implements MusicListener {
         }
     }
 
-    public void onScanDirectoryAction() {
+    @FXML
+    public void onScanDirectoryAction() throws DatabaseException {
         DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Select a directory.");
         File selected = fileChooser.showDialog(null);
         if (selected != null) {
             directoryScanner.scanDirectory(selected);
+            playlist.initPlaylist(DatabaseUtils.getAllMusicForPlaylist(databaseManager));
         }
     }
 
@@ -175,6 +178,7 @@ public class MainFrameMapping implements MusicListener {
         tagLabel.setText(tagListBuilder.toString());
     }
 
+    @FXML
     public void onRateAction() {
         if (rateComboBox.getSelectionModel().isEmpty()) {
             return;
