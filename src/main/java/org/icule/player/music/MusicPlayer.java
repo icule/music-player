@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class MusicPlayer {
+    public static final int DEFAULT_VOLUME = 71;
+
     private final DatabaseManager databaseManager;
     private final Playlist playlist;
     private final List<MusicListener> musicListenerList;
@@ -55,7 +57,7 @@ public class MusicPlayer {
     private void handleBrokenAudioFile() {
         try {
             List<TagMusicInformation> currentMusicTagList = databaseManager.getAllTagForMusic(currentMusic.getId());
-            if (!currentMusicTagList.stream().anyMatch(t -> t.getTag().equals(Tag.TO_FIX))) {
+            if (currentMusicTagList.stream().noneMatch(t -> t.getTag().equals(Tag.TO_FIX))) {
                 databaseManager.addTagMusicInformation(new TagMusicInformation(currentMusic.getId(),
                                                                                Tag.TO_FIX,
                                                                                currentMusic.getLastModification()));
@@ -70,7 +72,10 @@ public class MusicPlayer {
     private void setItem(final UUID musicId) {
         try {
             currentMusic = databaseManager.getMusic(musicId);
-            Platform.runLater(() -> mediaPlayer.media().play(currentMusic.getPath()));
+            Platform.runLater(() -> {
+                mediaPlayer.media().play(currentMusic.getPath());
+                mediaPlayer.audio().setVolume(currentMusic.getVolumeOffset());
+            });
             fireNewMusic();
         }
         catch (DatabaseException e) {
