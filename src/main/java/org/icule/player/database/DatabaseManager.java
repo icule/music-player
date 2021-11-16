@@ -142,6 +142,10 @@ public class DatabaseManager {
         return tagDatabaseInterface.getTagListForMusic(id);
     }
 
+    public synchronized TagMusicInformation getTagForMusic(final UUID id, final Tag tag) throws DatabaseException {
+        return tagDatabaseInterface.getTagForMusic(id, tag);
+    }
+
     public synchronized void updateLastModificationTime(final TagMusicInformation tagMusicInformation) throws DatabaseException {
         try {
             tagDatabaseInterface.updateLastModificationTime(tagMusicInformation);

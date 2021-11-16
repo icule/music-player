@@ -28,6 +28,9 @@ public class TagDatabaseInterface {
     private static final String SELECT_FROM_ID = "SELECT * FROM " + TABLE_NAME +
             " WHERE id = ?;";
 
+    private static final String SELECT_FROM_ID_TAG_QUERY = "SELECT * FROM " + TABLE_NAME +
+            " WHERE id = ? AND tag = ?;";
+
     private static final String GET_ALL_ID_FOR_TAG_QUERY = "SELECT id FROM " + TABLE_NAME +
             " WHERE tag = ?;";
 
@@ -85,6 +88,22 @@ public class TagDatabaseInterface {
         }
         catch (SQLException e) {
             throw new DatabaseException(e, "Impossible to get the tag list for music %s", id);
+        }
+    }
+
+    TagMusicInformation getTagForMusic(final UUID id, final Tag tag) throws DatabaseException {
+        try (PreparedStatement statement = databaseManager.getStatement(SELECT_FROM_ID_TAG_QUERY)) {
+            statement.setObject(1, id);
+            statement.setString(2, tag.name());
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return extractTagMusicInformation(resultSet);
+            }
+            return null;
+        }
+        catch (SQLException e) {
+            throw new DatabaseException(e, "Impossible to get the tag for music %s", id);
         }
     }
 

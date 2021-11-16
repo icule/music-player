@@ -3,6 +3,7 @@ package org.icule.player.gui;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -16,11 +17,11 @@ import org.icule.player.model.TagMusicInformation;
 import org.icule.player.music.MusicUtils;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ToFixMusicFrame implements ChangeListener<Music> {
+    private static PseudoClass modifiedClass = PseudoClass.getPseudoClass("modified");
+
     public Label titleLabel;
     public Label artistLabel;
     public Label albumLabel;
@@ -40,11 +41,15 @@ public class ToFixMusicFrame implements ChangeListener<Music> {
     public void initialize() throws DatabaseException {
         List<UUID> idList = databaseManager.getAllMusicIdForTag(Tag.TO_FIX);
 
-        List<Music> allToRemove = new ArrayList<>();
+        List<Music> allToFix = new ArrayList<>();
+        Map<UUID, Long> lastModification = new HashMap<>();
+
         for (UUID uuid : idList) {
-            allToRemove.add(databaseManager.getMusic(uuid));
+            allToFix.add(databaseManager.getMusic(uuid));
+            TagMusicInformation tag = databaseManager.getTagForMusic(uuid, Tag.TO_FIX);
+            lastModification.put(tag.getMusicId(), tag.getLastModification());
         }
-        musicListView.setItems(FXCollections.observableList(allToRemove));
+        musicListView.setItems(FXCollections.observableList(allToFix));
 
         musicListView.setCellFactory(musicListView1 -> {
             return new ListCell<>(){
@@ -55,6 +60,12 @@ public class ToFixMusicFrame implements ChangeListener<Music> {
                         setText(null);
                     } else {
                         setText(music.getPath());
+                        if (music.getLastModification() > lastModification.get(music.getId())) {
+                            pseudoClassStateChanged(modifiedClass, true);
+                        }
+                        else {
+                            pseudoClassStateChanged(modifiedClass, false);
+                        }
                     }
                 }
             };

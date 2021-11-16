@@ -58,7 +58,7 @@ public class DirectoryScanner {
             playlist.addMusic(toAdd);
         }
         else {
-            databaseManager.updateMusic(toAdd.withRating(inDatabase.getRating()));
+            databaseManager.updateMusic(toAdd.withRating(inDatabase.getRating()).withVolumeOffset(inDatabase.getVolumeOffset()));
         }
     }
 
