@@ -5,6 +5,8 @@ import org.icule.player.database.DatabaseException;
 import org.icule.player.database.DatabaseManager;
 import org.icule.player.model.Music;
 import org.icule.player.model.Playlist;
+import org.icule.player.model.Tag;
+import org.icule.player.model.TagMusicInformation;
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.base.MediaPlayer;
 
@@ -40,7 +42,29 @@ public class MusicPlayer {
             public void error(final MediaPlayer mediaPlayer) {
                 nextMusic();
             }
+
+            @Override
+            public void positionChanged(MediaPlayer mediaPlayer, float v) {
+                if (mediaPlayer.audio().volume() == -1 ) {
+                    handleBrokenAudioFile();
+                }
+            }
         });
+    }
+
+    private void handleBrokenAudioFile() {
+        try {
+            List<TagMusicInformation> currentMusicTagList = databaseManager.getAllTagForMusic(currentMusic.getId());
+            if (!currentMusicTagList.stream().anyMatch(t -> t.getTag().equals(Tag.TO_FIX))) {
+                databaseManager.addTagMusicInformation(new TagMusicInformation(currentMusic.getId(),
+                                                                               Tag.TO_FIX,
+                                                                               currentMusic.getLastModification()));
+            }
+        }
+        catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+        nextMusic();
     }
 
     private void setItem(final UUID musicId) {
