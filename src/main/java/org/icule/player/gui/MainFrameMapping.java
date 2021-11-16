@@ -6,10 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.input.DragEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -40,6 +38,7 @@ public class MainFrameMapping implements MusicListener {
 
     @FXML
     public ComboBox<Integer> rateComboBox;
+    public Slider volumeSlider;
 
     @FXML
     private ComboBox<Tag> tagCombo;
@@ -72,6 +71,7 @@ public class MainFrameMapping implements MusicListener {
             ratingList.add(i);
         }
         rateComboBox.setItems(FXCollections.observableList(ratingList));
+        volumeSlider.valueProperty().addListener((observableValue, number, t1) -> handleVolumeChange());
     }
 
     @FXML
@@ -166,6 +166,7 @@ public class MainFrameMapping implements MusicListener {
             idLabel.setText(music.getId().toString());
 
             rateComboBox.getSelectionModel().select(music.getRating() - 1);
+            volumeSlider.setValue(music.getVolumeOffset());
 
             displayTagList(tagList);
         }
@@ -230,5 +231,18 @@ public class MainFrameMapping implements MusicListener {
     public void onCheckMusicAction() throws DatabaseException {
         directoryScanner.checkDatabaseExistence();
         playlist.initPlaylist(DatabaseUtils.getAllMusicForPlaylist(databaseManager));
+    }
+
+    private void handleVolumeChange() {
+        musicPlayer.setVolume((int) volumeSlider.getValue());
+
+        try {
+            Music currentMusic = databaseManager.getMusic(musicPlayer.getCurrentMusic().getId());
+            databaseManager.updateMusic(currentMusic.withVolumeOffset((int) volumeSlider.getValue()));
+        }
+        catch (DatabaseException e) {
+            e.printStackTrace();
+        }
+
     }
 }

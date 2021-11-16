@@ -116,4 +116,8 @@ public class MusicPlayer {
             listener.musicStarted(currentMusic.getId());
         }
     }
+
+    public void setVolume(int volume) {
+        mediaPlayer.audio().setVolume(volume);
+    }
 }
