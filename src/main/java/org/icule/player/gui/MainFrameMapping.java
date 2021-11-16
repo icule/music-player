@@ -2,12 +2,9 @@ package org.icule.player.gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.DragEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -117,9 +114,10 @@ public class MainFrameMapping implements MusicListener {
                                                                                   music.getLastModification());
                 databaseManager.addTagMusicInformation(tagMusicInformation);
                 tagList.add(tagMusicInformation);
-
-                playlist.removeMusic(music);
-                musicPlayer.nextMusic();
+                if (selectedTag == Tag.TO_REMOVE) {
+                    playlist.removeMusic(music);
+                    musicPlayer.nextMusic();
+                }
             }
 
             displayTagList(tagList);
@@ -244,5 +242,20 @@ public class MainFrameMapping implements MusicListener {
             e.printStackTrace();
         }
 
+    }
+
+    public void onShowToFixAction() throws IOException {
+        FXMLLoader loader = FXMLLoaderFactory.getLoader();
+        loader.setLocation(getClass().getResource("/org/icule/player/gui/ToFixMusicFrame.fxml"));
+
+        BorderPane pane = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(FXMLLoaderFactory.getScene(pane));
+        stage.setTitle("Music tagged with removed.");
+
+        ToFixMusicFrame frame = loader.getController();
+        frame.setStage(stage);
+
+        stage.show();
     }
 }

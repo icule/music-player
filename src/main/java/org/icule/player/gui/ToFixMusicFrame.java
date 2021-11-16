@@ -12,6 +12,7 @@ import org.icule.player.database.DatabaseManager;
 import org.icule.player.model.Music;
 import org.icule.player.model.MusicInformation;
 import org.icule.player.model.Tag;
+import org.icule.player.model.TagMusicInformation;
 import org.icule.player.music.MusicUtils;
 
 import javax.inject.Inject;
@@ -69,8 +70,11 @@ public class ToFixMusicFrame implements ChangeListener<Music> {
     }
 
     @FXML
-    public void onRemoveTagAction() {
-
+    public void onRemoveTagAction() throws DatabaseException {
+        Music selected = musicListView.getSelectionModel().getSelectedItem();
+        TagMusicInformation tagMusicInformation = new TagMusicInformation(selected.getId(), Tag.TO_FIX, selected.getLastModification());
+        databaseManager.deleteTagMusicInformation(tagMusicInformation);
+        musicListView.getItems().remove(selected);
     }
 
     @FXML
