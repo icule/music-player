@@ -8,11 +8,24 @@
    <bottom>
       <BorderPane BorderPane.alignment="CENTER">
          <bottom>
-            <FlowPane alignment="CENTER_RIGHT" hgap="50.0" vgap="50.0">
+            <FlowPane alignment="CENTER_RIGHT" vgap="5.0">
                <children>
+                  <Button mnemonicParsing="false" onAction="#onExportAction" text="Export">
+                     <FlowPane.margin>
+                        <Insets right="5.0" />
+                     </FlowPane.margin>
+                  </Button>
                   <Button fx:id="removeTagButton" mnemonicParsing="false" onAction="#onRemoveTagAction" text="Remove Tag" />
+                  <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" visible="false">
+                     <FlowPane.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </FlowPane.margin>
+                  </Separator>
                   <Button mnemonicParsing="false" onAction="#onCloseAction" text="Close" />
                </children>
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
             </FlowPane>
          </bottom>
          <center>

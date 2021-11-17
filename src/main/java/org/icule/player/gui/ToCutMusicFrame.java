@@ -1,23 +1,26 @@
 package org.icule.player.gui;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.icule.player.database.DatabaseException;
 import org.icule.player.database.DatabaseManager;
-import org.icule.player.model.Music;
-import org.icule.player.model.MusicInformation;
-import org.icule.player.model.Tag;
-import org.icule.player.model.TagMusicInformation;
+import org.icule.player.model.*;
 import org.icule.player.music.MusicUtils;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ToCutMusicFrame implements ChangeListener<Music> {
     private static PseudoClass modifiedClass = PseudoClass.getPseudoClass("modified");
@@ -116,5 +119,24 @@ public class ToCutMusicFrame implements ChangeListener<Music> {
             displayMusic(t1);
             removeTagButton.setDisable(false);
         }
+    }
+
+    public void onExportAction() throws IOException {
+        FXMLLoader loader = FXMLLoaderFactory.getLoader();
+        loader.setLocation(getClass().getResource("/org/icule/player/gui/ExportFrame.fxml"));
+
+        BorderPane pane = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(FXMLLoaderFactory.getScene(pane));
+        stage.setTitle("Music tagged with removed.");
+
+        ExportFrame frame = loader.getController();
+
+        List<UUID> idList = musicListView.getItems().stream().map(Music::getId).collect(Collectors.toList());
+        ExportData content = new ExportData(Tag.TO_CUT, idList);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        frame.setContent(gson.toJson(content));
+
+        stage.show();
     }
 }
