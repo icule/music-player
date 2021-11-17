@@ -2,6 +2,7 @@ package org.icule.player.gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -254,6 +255,21 @@ public class MainFrameMapping implements MusicListener {
         stage.setTitle("Music tagged with removed.");
 
         ToFixMusicFrame frame = loader.getController();
+        frame.setStage(stage);
+
+        stage.show();
+    }
+
+    public void onShowToCutAction() throws IOException {
+        FXMLLoader loader = FXMLLoaderFactory.getLoader();
+        loader.setLocation(getClass().getResource("/org/icule/player/gui/ToCutMusicFrame.fxml"));
+
+        BorderPane pane = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(FXMLLoaderFactory.getScene(pane));
+        stage.setTitle("Music tagged with removed.");
+
+        ToCutMusicFrame frame = loader.getController();
         frame.setStage(stage);
 
         stage.show();

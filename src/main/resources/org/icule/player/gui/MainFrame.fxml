@@ -81,6 +81,7 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#onShowRemoveMusicAction" text="Show removed music" />
                   <MenuItem mnemonicParsing="false" onAction="#onShowToFixAction" text="Show music to fix" />
+                   <MenuItem mnemonicParsing="false" onAction="#onShowToCutAction" text="Show music to cut" />
                </items></Menu>
         </menus>
       </MenuBar>
