@@ -121,6 +121,7 @@ public class ToCutMusicFrame implements ChangeListener<Music> {
         }
     }
 
+    @FXML
     public void onExportAction() throws IOException {
         FXMLLoader loader = FXMLLoaderFactory.getLoader();
         loader.setLocation(getClass().getResource("/org/icule/player/gui/ExportFrame.fxml"));
