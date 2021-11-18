@@ -158,7 +158,7 @@ public class MainFrameMapping implements MusicListener {
 
             titleLabel.setText(musicInformation.getTitle());
             artistLabel.setText(musicInformation.getArtist());
-            albumLabel.setText(musicInformation.getArtist());
+            albumLabel.setText(musicInformation.getAlbum());
             durationLabel.setText("" + musicInformation.getDuration() / 1000); //duration is in ms
             pathLabel.setText(music.getPath());
             pathLabel.setTooltip(new Tooltip(music.getPath()));
