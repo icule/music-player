@@ -15,6 +15,11 @@
                         <Insets right="5.0" />
                      </FlowPane.margin>
                   </Button>
+                  <Button fx:id="actualizeTagButton" mnemonicParsing="false" onAction="#onActualizeTagAction" text="Actualize Tag">
+                     <FlowPane.margin>
+                        <Insets right="5.0" />
+                     </FlowPane.margin>
+                  </Button>
                   <Button fx:id="removeTagButton" mnemonicParsing="false" onAction="#onRemoveTagAction" text="Remove Tag" />
                   <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" visible="false">
                      <FlowPane.margin>

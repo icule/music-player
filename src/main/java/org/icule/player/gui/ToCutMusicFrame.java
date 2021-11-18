@@ -33,7 +33,10 @@ public class ToCutMusicFrame implements ChangeListener<Music> {
 
     private final DatabaseManager databaseManager;
     public Button removeTagButton;
+    public Button actualizeTagButton;
+
     private Stage stage;
+    private Map<UUID, Long> lastModificationMap;
 
     @Inject
     public ToCutMusicFrame(final DatabaseManager databaseManager) {
@@ -45,12 +48,12 @@ public class ToCutMusicFrame implements ChangeListener<Music> {
         List<UUID> idList = databaseManager.getAllMusicIdForTag(Tag.TO_CUT);
 
         List<Music> allToFix = new ArrayList<>();
-        Map<UUID, Long> lastModification = new HashMap<>();
+        lastModificationMap = new HashMap<>();
 
         for (UUID uuid : idList) {
             allToFix.add(databaseManager.getMusic(uuid));
             TagMusicInformation tag = databaseManager.getTagForMusic(uuid, Tag.TO_CUT);
-            lastModification.put(tag.getMusicId(), tag.getLastModification());
+            lastModificationMap.put(tag.getMusicId(), tag.getLastModification());
         }
         musicListView.setItems(FXCollections.observableList(allToFix));
 
@@ -63,7 +66,7 @@ public class ToCutMusicFrame implements ChangeListener<Music> {
                         setText(null);
                     } else {
                         setText(music.getPath());
-                        if (music.getLastModification() > lastModification.get(music.getId())) {
+                        if (music.getLastModification() > lastModificationMap.get(music.getId())) {
                             pseudoClassStateChanged(modifiedClass, true);
                         }
                         else {
@@ -76,6 +79,7 @@ public class ToCutMusicFrame implements ChangeListener<Music> {
         musicListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         musicListView.getSelectionModel().selectedItemProperty().addListener(this);
         removeTagButton.setDisable(true);
+        actualizeTagButton.setDisable(true);
     }
 
     public void setStage(final Stage stage) {
@@ -114,10 +118,18 @@ public class ToCutMusicFrame implements ChangeListener<Music> {
         if (t1 == null) {
             resetField();
             removeTagButton.setDisable(true);
+            actualizeTagButton.setDisable(true);
+
         }
         else {
             displayMusic(t1);
             removeTagButton.setDisable(false);
+            if (lastModificationMap.get(t1.getId()) < t1.getLastModification()) {
+                actualizeTagButton.setDisable(false);
+            }
+            else {
+                actualizeTagButton.setDisable(true);
+            }
         }
     }
 
@@ -139,5 +151,14 @@ public class ToCutMusicFrame implements ChangeListener<Music> {
         frame.setContent(gson.toJson(content));
 
         stage.show();
+    }
+
+    @FXML
+    public void onActualizeTagAction() throws DatabaseException {
+        Music selected = musicListView.getSelectionModel().getSelectedItem();
+        TagMusicInformation tagMusicInformation = databaseManager.getTagForMusic(selected.getId(), Tag.TO_CUT);
+        databaseManager.updateLastModificationTime(tagMusicInformation.withLastModification(selected.getLastModification()));
+        lastModificationMap.put(selected.getId(), selected.getLastModification());
+        musicListView.refresh();
     }
 }
