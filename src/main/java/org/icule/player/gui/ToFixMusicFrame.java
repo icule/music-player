@@ -19,6 +19,7 @@ import org.icule.player.music.MusicUtils;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -145,7 +146,7 @@ public class ToFixMusicFrame implements ChangeListener<Music> {
         ExportFrame frame = loader.getController();
 
         List<UUID> idList = musicListView.getItems().stream().map(Music::getId).collect(Collectors.toList());
-        ExportData content = new ExportData(Tag.TO_CUT, idList);
+        ExportData content = new ExportData(Tag.TO_CUT, Instant.now(), idList);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         frame.setContent(gson.toJson(content));
 
